@@ -2,7 +2,7 @@
 
 Parser::Parser() {}
 
-void Parser::parse(string fileName)
+void Parser::parse(string fileName, int width, int heigth)
 {
     fstream file;
     file.open(fileName, ios::in);
@@ -22,6 +22,7 @@ void Parser::parse(string fileName)
             float y = stof(numbers.at(2));
             float z = stof(numbers.at(3));
             Vertex v(x, y, z);
+            v.resize(width, heigth);
             points.push_back(v);
         }
         else if (!line.compare(0, 2, "f "))

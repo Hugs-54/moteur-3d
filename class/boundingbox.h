@@ -11,10 +11,8 @@ private:
     vector<Vertex> corners;
 
 public:
-    BoundingBox(float xmin, float ymin, float xmax, float ymax);
+    BoundingBox(float xmin, float ymin, float xmax, float ymax, int width, int heigth);
     Vertex getPoint(int index);
 };
-
-
 
 #endif //__BOUNDINGBOX_H__

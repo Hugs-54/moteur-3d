@@ -11,7 +11,9 @@ private:
     BoundingBox box;
 
 public:
-    // BoxAndFace(Face f, BoundingBox bb);
+    BoxAndTriangle(Triangle t, BoundingBox bb);
+    BoundingBox getBox();
+    Triangle getTriangle();
 };
 
 #endif //__BOXANDTRIANGLE_H__
