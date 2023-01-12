@@ -1,6 +1,8 @@
 #ifndef __VERTEX_H__
 #define __VERTEX_H__
 
+#include "tgaimage.h"
+
 class Vertex
 {
 private:
@@ -10,6 +12,8 @@ private:
     int p_x;
     int p_y;
     int p_z;
+    double component;
+    TGAColor color;
 
 public:
     Vertex(float x, float y, float z);
@@ -21,5 +25,9 @@ public:
     int getPixelY();
     int getPixelZ();
     void setPixel(int x, int y);
+    void setComponent(double c);
+    double getComponent();
+    void setColor(TGAColor c);
+    TGAColor getColor();
 };
 #endif //__VERTEX_H__

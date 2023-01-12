@@ -47,3 +47,23 @@ void Vertex::setPixel(int x, int y)
     p_x = x;
     p_y = y;
 }
+
+void Vertex::setComponent(double c)
+{
+    component = c;
+}
+
+double Vertex::getComponent()
+{
+    return component;
+}
+
+void Vertex::setColor(TGAColor c)
+{
+    color = c;
+}
+
+TGAColor Vertex::getColor()
+{
+    return color;
+}

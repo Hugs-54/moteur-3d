@@ -89,6 +89,29 @@ void Renderer::createBoundingBox(Triangle t)
     boxes.push_back(bb);
 }
 
+vector<int> Renderer::createBox(Triangle t)
+{
+    int xmin = t.getPoint(0).getPixelX();
+    int ymin = t.getPoint(0).getPixelY();
+    int xmax = t.getPoint(0).getPixelX();
+    int ymax = t.getPoint(0).getPixelY();
+
+    for (size_t i = 1; i < 3; i++)
+    {
+        Vertex v = t.getPoint(i);
+        if (v.getPixelX() < xmin)
+            xmin = v.getPixelX();
+        if (v.getPixelY() < ymin)
+            ymin = v.getPixelY();
+        if (v.getPixelX() > xmax)
+            xmax = v.getPixelX();
+        if (v.getPixelY() > ymax)
+            ymax = v.getPixelY();
+    }
+    vector<int> p = {xmin,xmax,ymin,ymax};
+    return p;
+}
+
 void Renderer::renderBoxes(vector<Triangle> triangles, TGAImage &image, TGAColor color)
 {
     createBoxes(triangles);
@@ -123,23 +146,27 @@ void Renderer::renderBox(BoundingBox b, TGAImage &image, TGAColor color)
 
 void Renderer::fillTriangles(vector<Triangle> triangles, TGAImage &image)
 {
-    createBoxes(triangles);
-    for (size_t k = 0; k < boxAndTriangle.size(); k++)
+    for (size_t k = 0; k < triangles.size(); k++)
     {
-        TGAColor color = randomize_color();
-        BoxAndTriangle bt = boxAndTriangle.at(k);
-        Triangle t = bt.getTriangle();
-        BoundingBox bb = bt.getBox();
-        // Optimiser en calculant la boite ici sans la sauvgarder en mémoire
-        //  Pour chaque pixel de la boite
-        for (int i = bb.getPoint(0).getPixelX(); i < bb.getPoint(1).getPixelX(); i++)
+        Triangle t = triangles.at(k);
+        vector<int> p = createBox(t);
+        
+        Vertex& v1 = t.getPoint(0);
+        Vertex& v2 = t.getPoint(1);
+        Vertex& v3 = t.getPoint(2);
+        v1.setColor(randomize_color());
+        v2.setColor(randomize_color());
+        v3.setColor(randomize_color());
+
+        // Pour chaque pixel de la boite
+        for (int i = p.at(0); i < p.at(1); i++)
         {
-            for (int j = bb.getPoint(0).getPixelY(); j < bb.getPoint(2).getPixelY(); j++)
+            for (int j = p.at(2); j < p.at(3); j++)
             {
                 // Si pixel dans le triangle alors remplir
                 if (isPointInsideTriangle(t, i, j))
                 {
-                    image.set(i, j, color);
+                    image.set(i, j, t.getPoint(0).getColor());
                 }
             }
         }
@@ -162,29 +189,29 @@ float Renderer::areaOfTriangle(Vertex v1, Vertex v2, Vertex v3)
     float y1 = v1.getPixelY();
     float y2 = v2.getPixelY();
     float y3 = v3.getPixelY();
-    return abs((x1 * (y2 - y3) + x2 * (y3 - y1) + x3 * (y1 - y2)) / 2.0);
+    return (x1 * (y2 - y3) + x2 * (y3 - y1) + x3 * (y1 - y2)) / 2.0;
 }
 
-bool Renderer::isPointInsideTriangle(Triangle t, float px, float py)
+bool Renderer::isPointInsideTriangle(Triangle& t, float px, float py)
 {
-    Vertex v1 = t.getPoint(0);
-    Vertex v2 = t.getPoint(1);
-    Vertex v3 = t.getPoint(2);
+    Vertex& v1 = t.getPoint(0);
+    Vertex& v2 = t.getPoint(1);
+    Vertex& v3 = t.getPoint(2);
     Vertex v4(px, py, 0);
     v4.setPixel(px, py);
 
-    /* Calculate area of triangle ABC */
     float A = areaOfTriangle(v1, v2, v3);
-
-    /* Calculate area of triangle PBC */
     float A1 = areaOfTriangle(v4, v2, v3);
-
-    /* Calculate area of triangle PAC */
     float A2 = areaOfTriangle(v1, v4, v3);
-
-    /* Calculate area of triangle PAB */
     float A3 = areaOfTriangle(v1, v2, v4);
 
-    /* Check if sum of A1, A2 and A3 is same as A */
-    return (A == A1 + A2 + A3);
+    double alpha = (double)A2/(double)A;
+    double beta  = (double)A3/(double)A;
+    double gamma = (double)A1/(double)A;
+
+    v1.setComponent(alpha);
+    v2.setComponent(beta);
+    v3.setComponent(gamma);
+
+    return alpha>-0.01 && beta>-0.01 && gamma>-0.01;
 }
