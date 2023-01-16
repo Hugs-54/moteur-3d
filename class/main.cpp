@@ -12,8 +12,8 @@ using namespace std;
 
 int main(int argc, char **argv)
 {
-    int width = 500;
-    int heigth = 500;
+    int width = 1000;
+    int heigth = 1000;
     TGAImage image(width, heigth, TGAImage::RGB);
     Parser parser;
     Renderer renderer(width, heigth);

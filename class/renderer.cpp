@@ -108,7 +108,7 @@ vector<int> Renderer::createBox(Triangle t)
         if (v.getPixelY() > ymax)
             ymax = v.getPixelY();
     }
-    vector<int> p = {xmin,xmax,ymin,ymax};
+    vector<int> p = {xmin, xmax, ymin, ymax};
     return p;
 }
 
@@ -146,17 +146,28 @@ void Renderer::renderBox(BoundingBox b, TGAImage &image, TGAColor color)
 
 void Renderer::fillTriangles(vector<Triangle> triangles, TGAImage &image)
 {
+    Vertex light(0, 0, -1);
     for (size_t k = 0; k < triangles.size(); k++)
     {
         Triangle t = triangles.at(k);
         vector<int> p = createBox(t);
-        
-        Vertex& v1 = t.getPoint(0);
-        Vertex& v2 = t.getPoint(1);
-        Vertex& v3 = t.getPoint(2);
+
+        Vertex &v1 = t.getPoint(0);
+        Vertex &v2 = t.getPoint(1);
+        Vertex &v3 = t.getPoint(2);
         v1.setColor(randomize_color());
         v2.setColor(randomize_color());
         v3.setColor(randomize_color());
+
+        Vertex vAB(v2.getX() - v1.getX(), v2.getY() - v1.getY(), v2.getZ() - v1.getZ());
+        Vertex vAC(v3.getX() - v1.getX(), v3.getY() - v1.getY(), v3.getZ() - v1.getZ());
+        double X = vAB.getY() * vAC.getZ() - vAB.getZ() * vAC.getY();
+        double Y = vAB.getZ() * vAC.getX() - vAB.getX() * vAC.getZ();
+        double Z = vAB.getX() * vAC.getY() - vAB.getY() * vAC.getX();
+        Vertex n(X, Y, Z);
+        double length = sqrt((n.getX() * n.getX()) + (n.getY() * n.getY()) + (n.getZ() * n.getZ()));
+        Vertex n2(n.getX() / length, n.getY() / length, n.getZ() / length);
+        double intensity = -((light.getX() * n2.getX()) + (light.getY() * n2.getY()) + (light.getZ() * n2.getZ()));
 
         // Pour chaque pixel de la boite
         for (int i = p.at(0); i < p.at(1); i++)
@@ -166,7 +177,11 @@ void Renderer::fillTriangles(vector<Triangle> triangles, TGAImage &image)
                 // Si pixel dans le triangle alors remplir
                 if (isPointInsideTriangle(t, i, j))
                 {
-                    image.set(i, j, t.getPoint(0).getColor());
+                    if (intensity > 0)
+                    {
+                        TGAColor c(255 * intensity, 255 * intensity, 255 * intensity, 255);
+                        image.set(i, j, c);
+                    }
                 }
             }
         }
@@ -192,11 +207,11 @@ float Renderer::areaOfTriangle(Vertex v1, Vertex v2, Vertex v3)
     return (x1 * (y2 - y3) + x2 * (y3 - y1) + x3 * (y1 - y2)) / 2.0;
 }
 
-bool Renderer::isPointInsideTriangle(Triangle& t, float px, float py)
+bool Renderer::isPointInsideTriangle(Triangle &t, float px, float py)
 {
-    Vertex& v1 = t.getPoint(0);
-    Vertex& v2 = t.getPoint(1);
-    Vertex& v3 = t.getPoint(2);
+    Vertex &v1 = t.getPoint(0);
+    Vertex &v2 = t.getPoint(1);
+    Vertex &v3 = t.getPoint(2);
     Vertex v4(px, py, 0);
     v4.setPixel(px, py);
 
@@ -205,13 +220,13 @@ bool Renderer::isPointInsideTriangle(Triangle& t, float px, float py)
     float A2 = areaOfTriangle(v1, v4, v3);
     float A3 = areaOfTriangle(v1, v2, v4);
 
-    double alpha = (double)A2/(double)A;
-    double beta  = (double)A3/(double)A;
-    double gamma = (double)A1/(double)A;
+    double alpha = (double)A2 / (double)A;
+    double beta = (double)A3 / (double)A;
+    double gamma = (double)A1 / (double)A;
 
     v1.setComponent(alpha);
     v2.setComponent(beta);
     v3.setComponent(gamma);
 
-    return alpha>-0.01 && beta>-0.01 && gamma>-0.01;
+    return alpha > -0.01 && beta > -0.01 && gamma > -0.01;
 }
