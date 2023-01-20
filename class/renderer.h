@@ -29,8 +29,9 @@ public:
     void renderTriangles(vector<Triangle> triangles, TGAImage &image, TGAColor color);
     void createBoundingBox(Triangle t);
     vector<int> createBox(Triangle t);
+    double getIntensity(Vertex v1, Vertex v2, Vertex v3);
     void renderBoxes(vector<Triangle> triangles, TGAImage &image, TGAColor color);
-    bool isPointInsideTriangle(Triangle& t, float px, float py);
+    bool isPointInsideTriangle(Triangle& t, float px, float py, Vertex& bary);
     void fillTriangles(vector<Triangle> triangles, TGAImage &image);
 };
 

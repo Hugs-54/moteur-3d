@@ -4,6 +4,10 @@ Vertex::Vertex(float x, float y, float z) : f_x{x}, f_y(y), f_z(z)
 {
 }
 
+Vertex::Vertex() : f_x{0}, f_y(0), f_z(0)
+{
+}
+
 void Vertex::resize(int width, int heigth)
 {
     int w = width / 2;
@@ -48,22 +52,17 @@ void Vertex::setPixel(int x, int y)
     p_y = y;
 }
 
-void Vertex::setComponent(double c)
+void Vertex::setX(float x)
 {
-    component = c;
+    f_x = x;
 }
 
-double Vertex::getComponent()
+void Vertex::setY(float y)
 {
-    return component;
+    f_y = y;
 }
 
-void Vertex::setColor(TGAColor c)
+void Vertex::setZ(float z)
 {
-    color = c;
-}
-
-TGAColor Vertex::getColor()
-{
-    return color;
+    f_z = z;
 }

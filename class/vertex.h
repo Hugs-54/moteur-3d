@@ -17,17 +17,17 @@ private:
 
 public:
     Vertex(float x, float y, float z);
+    Vertex();
     void resize(int width, int heigth);
     float getX();
     float getY();
     float getZ();
+    void setX(float x);
+    void setY(float y);
+    void setZ(float z);
     int getPixelX();
     int getPixelY();
     int getPixelZ();
     void setPixel(int x, int y);
-    void setComponent(double c);
-    double getComponent();
-    void setColor(TGAColor c);
-    TGAColor getColor();
 };
 #endif //__VERTEX_H__
