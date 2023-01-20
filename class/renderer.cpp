@@ -144,14 +144,10 @@ void Renderer::renderBox(BoundingBox b, TGAImage &image, TGAColor color)
     }
 }
 
-void Renderer::fillTriangles(vector<Triangle> triangles, TGAImage &image)
+void Renderer::fillTriangles(vector<Triangle> triangles, TGAImage &image, float *zbuffer)
 {
     Vertex b;
-    //A mettre dans le main
     int width = image.get_width();
-    int height = image.get_height();
-    float *zbuffer = new float[width*height];
-    for (int i=width*height; i--; zbuffer[i] = -std::numeric_limits<float>::max());
 
     for (Triangle &t : triangles)
     {

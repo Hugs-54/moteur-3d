@@ -13,6 +13,5 @@ private:
 public:
     Triangle(Vertex p1, Vertex p2, Vertex p3);
     Vertex& getPoint(int index);
-    void setColorComponent(TGAColor color,double compo,int index);
 };
 #endif //__TRIANGLE_H__

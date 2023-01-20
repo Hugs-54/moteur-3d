@@ -12,8 +12,6 @@ private:
     int p_x;
     int p_y;
     int p_z;
-    double component;
-    TGAColor color;
 
 public:
     Vertex(float x, float y, float z);

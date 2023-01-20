@@ -32,7 +32,7 @@ public:
     double getIntensity(Vertex v1, Vertex v2, Vertex v3);
     void renderBoxes(vector<Triangle> triangles, TGAImage &image, TGAColor color);
     bool isPointInsideTriangle(Triangle& t, float px, float py, Vertex& bary);
-    void fillTriangles(vector<Triangle> triangles, TGAImage &image);
+    void fillTriangles(vector<Triangle> triangles, TGAImage &image, float *zbuffer);
 };
 
 #endif //__RENDERER_H__

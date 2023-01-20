@@ -13,15 +13,17 @@ using namespace std;
 int main(int argc, char **argv)
 {
     int width = 1000;
-    int heigth = 1000;
-    TGAImage image(width, heigth, TGAImage::RGB);
+    int height = 1000;
+    TGAImage image(width, height, TGAImage::RGB);
     Parser parser;
-    Renderer renderer(width, heigth);
-    parser.parse("../resources/african_head.obj", width, heigth);
+    Renderer renderer(width, height);
+    parser.parse("../resources/african_head.obj", width, height);
     // renderer.renderTriangles(parser.getTriangles(), image, red);
     // renderer.renderPoints(parser.getPoints(), image, blue);
     // renderer.renderBoxes(parser.getTriangles(), image, white);
-    renderer.fillTriangles(parser.getTriangles(), image);
+    float *zbuffer = new float[width*height];
+    for (int i=width*height; i--; zbuffer[i] = -std::numeric_limits<float>::max());
+    renderer.fillTriangles(parser.triangles, image, zbuffer);
     image.flip_vertically(); // i want to have the origin at the left bottom corner of the image
     image.write_tga_file("output.tga");
     return 0;

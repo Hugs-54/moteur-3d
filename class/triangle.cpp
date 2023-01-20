@@ -11,9 +11,3 @@ Vertex& Triangle::getPoint(int index)
 {
     return points.at(index);
 }
-
-void Triangle::setColorComponent(TGAColor color,double compo,int index)
-{
-    points.at(index).setColor(color);
-    points.at(index).setComponent(compo);
-}
