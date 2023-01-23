@@ -15,6 +15,8 @@ int main(int argc, char **argv)
     int width = 1000;
     int height = 1000;
     TGAImage image(width, height, TGAImage::RGB);
+    TGAImage texture;
+    texture.read_tga_file("../resources/african_head_diffuse.tga");
     Parser parser;
     Renderer renderer(width, height);
     parser.parse("../resources/african_head.obj", width, height);
@@ -24,7 +26,7 @@ int main(int argc, char **argv)
     float *zbuffer = new float[width * height];
     for (int i = width * height; i--; zbuffer[i] = -std::numeric_limits<float>::max())
         ;
-    renderer.fillTriangles(parser.triangles, image, zbuffer);
+    renderer.fillTriangles(parser.triangles, image, texture, zbuffer);
     image.flip_vertically(); // i want to have the origin at the left bottom corner of the image
     image.write_tga_file("output.tga");
     return 0;

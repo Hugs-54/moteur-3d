@@ -7,13 +7,13 @@ class Tuple
 {
 private:
     Vertex m_i1;
-    int m_i2;
+    Vertex m_i2;
     int m_i3;
 
 public:
-    Tuple(Vertex i1, int i2, int i3);
+    Tuple(Vertex i1, Vertex i2, int i3);
     Vertex getI1();
-    int getI2();
+    Vertex getI2();
     int getI3();
 };
 #endif //__TUPLE_H__

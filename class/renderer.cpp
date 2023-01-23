@@ -144,7 +144,7 @@ void Renderer::renderBox(BoundingBox b, TGAImage &image, TGAColor color)
     }
 }
 
-void Renderer::fillTriangles(vector<Triangle> triangles, TGAImage &image, float *zbuffer)
+void Renderer::fillTriangles(vector<Triangle> triangles, TGAImage &image, TGAImage &texture, float *zbuffer)
 {
     Vertex b;
     int width = image.get_width();
@@ -155,6 +155,7 @@ void Renderer::fillTriangles(vector<Triangle> triangles, TGAImage &image, float 
 
         double intensity = getIntensity(t.getPoint(0), t.getPoint(1), t.getPoint(2));
         TGAColor color(255 * intensity, 255 * intensity, 255 * intensity, 255);
+        TGAColor colorTexture;
 
         // Pour chaque pixel de la boite
         for (int i = bbox.at(0); i < bbox.at(1); i++)
@@ -164,13 +165,17 @@ void Renderer::fillTriangles(vector<Triangle> triangles, TGAImage &image, float 
                 // Si pixel dans le triangle alors remplir
                 if (isPointInsideTriangle(t, i, j, b))
                 {
+                    double X = b.getX() * t.getVertexTexture(0).getX() + b.getY() * t.getVertexTexture(1).getX() + b.getZ() * t.getVertexTexture(2).getX(); // X = alpha * vt[0].X + beta * vt[1].X + gamma * vt[2].X
+                    double Y = b.getX() * t.getVertexTexture(0).getY() + b.getY() * t.getVertexTexture(1).getY() + b.getZ() * t.getVertexTexture(2).getY(); // Y = alpha * vt[0].Y + beta * vt[1].Y + gamma * vt[2].Y
+                    colorTexture = texture.get(X, Y);
+
                     double Z = b.getX() * t.getPoint(0).getZ();
                     Z += b.getY() * t.getPoint(1).getZ();
                     Z += b.getZ() * t.getPoint(2).getZ();
                     if (zbuffer[int(i + j * width)] < Z)
                     {
                         zbuffer[int(i + j * width)] = Z;
-                        image.set(i, j, color);
+                        image.set(i, j, TGAColor(colorTexture.r * intensity, colorTexture.g * intensity, colorTexture.b * intensity, colorTexture.a * intensity));
                     }
                 }
             }
