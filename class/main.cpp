@@ -1,5 +1,5 @@
-#include "tgaimage.h"
 #include "renderer.h"
+#include "tgaimage.h"
 #include "parser.h"
 #include <iostream>
 #include <fstream>
@@ -21,8 +21,9 @@ int main(int argc, char **argv)
     // renderer.renderTriangles(parser.getTriangles(), image, red);
     // renderer.renderPoints(parser.getPoints(), image, blue);
     // renderer.renderBoxes(parser.getTriangles(), image, white);
-    float *zbuffer = new float[width*height];
-    for (int i=width*height; i--; zbuffer[i] = -std::numeric_limits<float>::max());
+    float *zbuffer = new float[width * height];
+    for (int i = width * height; i--; zbuffer[i] = -std::numeric_limits<float>::max())
+        ;
     renderer.fillTriangles(parser.triangles, image, zbuffer);
     image.flip_vertically(); // i want to have the origin at the left bottom corner of the image
     image.write_tga_file("output.tga");

@@ -153,9 +153,9 @@ void Renderer::fillTriangles(vector<Triangle> triangles, TGAImage &image, float 
     {
         vector<int> bbox = createBox(t);
 
-        double intensity = getIntensity(t.getPoint(0),t.getPoint(1),t.getPoint(2));
+        double intensity = getIntensity(t.getPoint(0), t.getPoint(1), t.getPoint(2));
         TGAColor color(255 * intensity, 255 * intensity, 255 * intensity, 255);
-        
+
         // Pour chaque pixel de la boite
         for (int i = bbox.at(0); i < bbox.at(1); i++)
         {
@@ -167,8 +167,9 @@ void Renderer::fillTriangles(vector<Triangle> triangles, TGAImage &image, float 
                     double Z = b.getX() * t.getPoint(0).getZ();
                     Z += b.getY() * t.getPoint(1).getZ();
                     Z += b.getZ() * t.getPoint(2).getZ();
-                    if (zbuffer[int(i+j*width)] < Z) {
-                        zbuffer[int(i+j*width)] = Z;
+                    if (zbuffer[int(i + j * width)] < Z)
+                    {
+                        zbuffer[int(i + j * width)] = Z;
                         image.set(i, j, color);
                     }
                 }
@@ -211,7 +212,7 @@ float Renderer::areaOfTriangle(Vertex v1, Vertex v2, Vertex v3)
     return (x1 * (y2 - y3) + x2 * (y3 - y1) + x3 * (y1 - y2)) / 2.0;
 }
 
-bool Renderer::isPointInsideTriangle(Triangle &t, float px, float py, Vertex& bary)
+bool Renderer::isPointInsideTriangle(Triangle &t, float px, float py, Vertex &bary)
 {
     Vertex &v1 = t.getPoint(0);
     Vertex &v2 = t.getPoint(1);

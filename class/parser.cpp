@@ -39,7 +39,7 @@ void Parser::parse(string fileName, int width, int heigth)
             Triangle tri(t1.getI1(), t2.getI1(), t3.getI1());
             triangles.push_back(tri);
         }
-        else if (!line.compare(0, 2, "vt"))
+        else if (!line.compare(0, 3, "vt "))
         {
             vector<string> numbers;
             stringstream stream(line);
@@ -48,9 +48,9 @@ void Parser::parse(string fileName, int width, int heigth)
                 numbers.push_back(tmp);
             }
 
-            float x = stof(numbers.at(1));
-            float y = stof(numbers.at(2));
-            float z = stof(numbers.at(3));
+            float x = stof(numbers.at(2));
+            float y = stof(numbers.at(3));
+            float z = stof(numbers.at(4));
             Vertex v(x, y, z);
             pointsTextures.push_back(v);
         }
