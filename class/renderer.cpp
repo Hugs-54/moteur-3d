@@ -64,31 +64,6 @@ void Renderer::renderTriangles(vector<Triangle> triangles, TGAImage &image, TGAC
     }
 }
 
-void Renderer::createBoundingBox(Triangle t)
-{
-    float xmin = t.getPoint(0).getX();
-    float ymin = t.getPoint(0).getY();
-    float xmax = t.getPoint(0).getX();
-    float ymax = t.getPoint(0).getY();
-
-    for (size_t i = 1; i < 3; i++)
-    {
-        Vertex v = t.getPoint(i);
-        if (v.getX() < xmin)
-            xmin = v.getX();
-        if (v.getY() < ymin)
-            ymin = v.getY();
-        if (v.getX() > xmax)
-            xmax = v.getX();
-        if (v.getY() > ymax)
-            ymax = v.getY();
-    }
-
-    BoundingBox bb(xmin, ymin, xmax, ymax, width, heigth);
-    boxAndTriangle.push_back(BoxAndTriangle(t, bb));
-    boxes.push_back(bb);
-}
-
 vector<int> Renderer::createBox(Triangle t)
 {
     int xmin = t.getPoint(0).getPixelX();
@@ -112,38 +87,6 @@ vector<int> Renderer::createBox(Triangle t)
     return p;
 }
 
-void Renderer::renderBoxes(vector<Triangle> triangles, TGAImage &image, TGAColor color)
-{
-    createBoxes(triangles);
-    for (size_t i = 0; i < triangles.size(); i++)
-    {
-        renderBox(boxes.at(i), image, color);
-    }
-}
-
-void Renderer::createBoxes(vector<Triangle> triangles)
-{
-    for (size_t i = 0; i < triangles.size(); i++)
-    {
-        Triangle t = triangles.at(i);
-        createBoundingBox(t);
-    }
-}
-
-void Renderer::renderBox(BoundingBox b, TGAImage &image, TGAColor color)
-{
-    for (size_t i = 0; i < 4; i++)
-    {
-        Vertex v0 = b.getPoint(i);
-        Vertex v1 = b.getPoint((i + 1) % 4);
-        int x0 = v0.getPixelX();
-        int y0 = v0.getPixelY();
-        int x1 = v1.getPixelX();
-        int y1 = v1.getPixelY();
-        line(x0, y0, x1, y1, image, color);
-    }
-}
-
 void Renderer::fillTriangles(vector<Triangle> triangles, TGAImage &image, TGAImage &texture, float *zbuffer)
 {
     Vertex b;
@@ -154,7 +97,7 @@ void Renderer::fillTriangles(vector<Triangle> triangles, TGAImage &image, TGAIma
     for (Triangle &t : triangles)
     {
         double intensity = getIntensity(t.getPoint(0), t.getPoint(1), t.getPoint(2));
-        if (intensity<0) continue; //Si l'intensité est inférieur à zéro
+        if (intensity < 0) continue; //Si l'intensité est inférieur à zéro
         TGAColor colorTexture;
         vector<int> bbox = createBox(t);
 
@@ -197,14 +140,6 @@ double Renderer::getIntensity(Vertex v1, Vertex v2, Vertex v3)
     Vertex n2(n.getX() / length, n.getY() / length, n.getZ() / length);
     double intensity = -((light.getX() * n2.getX()) + (light.getY() * n2.getY()) + (light.getZ() * n2.getZ()));
     return intensity;
-}
-
-TGAColor Renderer::randomize_color()
-{
-    std::random_device rd;
-    std::default_random_engine engine(rd());
-    std::uniform_int_distribution<int> distr(0, 255);
-    return TGAColor(distr(engine), distr(engine), distr(engine), 255);
 }
 
 float Renderer::areaOfTriangle(Vertex v1, Vertex v2, Vertex v3)
