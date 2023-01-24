@@ -17,6 +17,7 @@ int main(int argc, char **argv)
     TGAImage image(width, height, TGAImage::RGB);
     TGAImage texture;
     texture.read_tga_file("../resources/african_head_diffuse.tga");
+    texture.flip_vertically();
     Parser parser;
     Renderer renderer(width, height);
     parser.parse("../resources/african_head.obj", width, height);

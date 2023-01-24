@@ -17,6 +17,7 @@ public:
     vector<Vertex> points;
     vector<Triangle> triangles;
     vector<Vertex> pointsTextures;
+    vector<Vertex> vn;
     void parse(string fileName, int width, int heigth);
     Tuple parseTuple(string t);
     vector<Vertex> getPoints();

@@ -1,6 +1,6 @@
 #include "vertex.h"
 
-Vertex::Vertex(float x, float y, float z) : f_x{x}, f_y(y), f_z(z)
+Vertex::Vertex(double x, double y, double z) : f_x{x}, f_y(y), f_z(z)
 {
 }
 
@@ -16,17 +16,17 @@ void Vertex::resize(int width, int heigth)
     p_y = f_y * h + h;
 }
 
-float Vertex::getX()
+double Vertex::getX()
 {
     return f_x;
 }
 
-float Vertex::getY()
+double Vertex::getY()
 {
     return f_y;
 }
 
-float Vertex::getZ()
+double Vertex::getZ()
 {
     return f_z;
 }
@@ -52,17 +52,17 @@ void Vertex::setPixel(int x, int y)
     p_y = y;
 }
 
-void Vertex::setX(float x)
+void Vertex::setX(double x)
 {
     f_x = x;
 }
 
-void Vertex::setY(float y)
+void Vertex::setY(double y)
 {
     f_y = y;
 }
 
-void Vertex::setZ(float z)
+void Vertex::setZ(double z)
 {
     f_z = z;
 }

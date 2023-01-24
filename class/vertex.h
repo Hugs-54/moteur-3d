@@ -6,23 +6,23 @@
 class Vertex
 {
 private:
-    float f_x;
-    float f_y;
-    float f_z;
+    double f_x;
+    double f_y;
+    double f_z;
     int p_x;
     int p_y;
     int p_z;
 
 public:
-    Vertex(float x, float y, float z);
+    Vertex(double x, double y, double z);
     Vertex();
     void resize(int width, int heigth);
-    float getX();
-    float getY();
-    float getZ();
-    void setX(float x);
-    void setY(float y);
-    void setZ(float z);
+    double getX();
+    double getY();
+    double getZ();
+    void setX(double x);
+    void setY(double y);
+    void setZ(double z);
     int getPixelX();
     int getPixelY();
     int getPixelZ();

@@ -148,14 +148,15 @@ void Renderer::fillTriangles(vector<Triangle> triangles, TGAImage &image, TGAIma
 {
     Vertex b;
     int width = image.get_width();
+    int widthTexture = texture.get_width();
+    int heightTexture = texture.get_height();
 
     for (Triangle &t : triangles)
     {
-        vector<int> bbox = createBox(t);
-
         double intensity = getIntensity(t.getPoint(0), t.getPoint(1), t.getPoint(2));
-        TGAColor color(255 * intensity, 255 * intensity, 255 * intensity, 255);
+        if (intensity<0) continue; //Si l'intensité est inférieur à zéro
         TGAColor colorTexture;
+        vector<int> bbox = createBox(t);
 
         // Pour chaque pixel de la boite
         for (int i = bbox.at(0); i < bbox.at(1); i++)
@@ -165,8 +166,8 @@ void Renderer::fillTriangles(vector<Triangle> triangles, TGAImage &image, TGAIma
                 // Si pixel dans le triangle alors remplir
                 if (isPointInsideTriangle(t, i, j, b))
                 {
-                    double X = b.getX() * t.getVertexTexture(0).getX() + b.getY() * t.getVertexTexture(1).getX() + b.getZ() * t.getVertexTexture(2).getX(); // X = alpha * vt[0].X + beta * vt[1].X + gamma * vt[2].X
-                    double Y = b.getX() * t.getVertexTexture(0).getY() + b.getY() * t.getVertexTexture(1).getY() + b.getZ() * t.getVertexTexture(2).getY(); // Y = alpha * vt[0].Y + beta * vt[1].Y + gamma * vt[2].Y
+                    double X = b.getX() * t.getVertexTexture(1).getX() * widthTexture + b.getY() * t.getVertexTexture(2).getX() * widthTexture + b.getZ() * t.getVertexTexture(0).getX() * widthTexture; // X = alpha * vt[0].X + beta * vt[1].X + gamma * vt[2].X
+                    double Y = b.getX() * t.getVertexTexture(1).getY() * heightTexture + b.getY() * t.getVertexTexture(2).getY() * heightTexture + b.getZ() * t.getVertexTexture(0).getY() * heightTexture; // Y = alpha * vt[0].Y + beta * vt[1].Y + gamma * vt[2].Y
                     colorTexture = texture.get(X, Y);
 
                     double Z = b.getX() * t.getPoint(0).getZ();
@@ -225,10 +226,10 @@ bool Renderer::isPointInsideTriangle(Triangle &t, float px, float py, Vertex &ba
     Vertex v4(px, py, 0);
     v4.setPixel(px, py);
 
-    float A = areaOfTriangle(v1, v2, v3);
-    float A1 = areaOfTriangle(v4, v2, v3);
-    float A2 = areaOfTriangle(v1, v4, v3);
-    float A3 = areaOfTriangle(v1, v2, v4);
+    double A = areaOfTriangle(v1, v2, v3);
+    double A1 = areaOfTriangle(v4, v2, v3);
+    double A2 = areaOfTriangle(v1, v4, v3);
+    double A3 = areaOfTriangle(v1, v2, v4);
 
     double alpha = (double)A2 / (double)A;
     double beta = (double)A3 / (double)A;
@@ -238,5 +239,5 @@ bool Renderer::isPointInsideTriangle(Triangle &t, float px, float py, Vertex &ba
     bary.setY(beta);
     bary.setZ(gamma);
 
-    return alpha > -0.01 && beta > -0.01 && gamma > -0.01;
+    return alpha > -0.0001 && beta > -0.0001 && gamma > -0.0001;
 }
