@@ -91,13 +91,15 @@ void Renderer::fillTriangles(vector<Triangle> triangles, TGAImage &image, TGAIma
 {
     Vertex b;
     int width = image.get_width();
+    int height = image.get_height();
     int widthTexture = texture.get_width();
     int heightTexture = texture.get_height();
 
     for (Triangle &t : triangles)
     {
         double intensity = getIntensity(t.getPoint(0), t.getPoint(1), t.getPoint(2));
-        if (intensity < 0) continue; //Si l'intensité est inférieur à zéro
+        if (intensity < 0)
+            continue; // Si l'intensité est inférieur à zéro
         TGAColor colorTexture;
         vector<int> bbox = createBox(t);
 
@@ -106,10 +108,14 @@ void Renderer::fillTriangles(vector<Triangle> triangles, TGAImage &image, TGAIma
         {
             for (int j = bbox.at(2); j < bbox.at(3); j++)
             {
+
+                if (i < 0 || i > width || j < 0 || j > height)
+                    continue;
+
                 // Si pixel dans le triangle alors remplir
                 if (isPointInsideTriangle(t, i, j, b))
                 {
-                    double X = b.getX() * t.getVertexTexture(1).getX() * widthTexture + b.getY() * t.getVertexTexture(2).getX() * widthTexture + b.getZ() * t.getVertexTexture(0).getX() * widthTexture; // X = alpha * vt[0].X + beta * vt[1].X + gamma * vt[2].X
+                    double X = b.getX() * t.getVertexTexture(1).getX() * widthTexture + b.getY() * t.getVertexTexture(2).getX() * widthTexture + b.getZ() * t.getVertexTexture(0).getX() * widthTexture;    // X = alpha * vt[0].X + beta * vt[1].X + gamma * vt[2].X
                     double Y = b.getX() * t.getVertexTexture(1).getY() * heightTexture + b.getY() * t.getVertexTexture(2).getY() * heightTexture + b.getZ() * t.getVertexTexture(0).getY() * heightTexture; // Y = alpha * vt[0].Y + beta * vt[1].Y + gamma * vt[2].Y
                     colorTexture = texture.get(X, Y);
 

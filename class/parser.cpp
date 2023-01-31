@@ -2,7 +2,7 @@
 
 Parser::Parser() {}
 
-void Parser::parse(string fileName, int width, int heigth)
+void Parser::parse(string fileName, int width, int heigth, double dstZ)
 {
     fstream file;
     file.open(fileName, ios::in);
@@ -21,8 +21,9 @@ void Parser::parse(string fileName, int width, int heigth)
             float y = stof(numbers.at(2));
             float z = stof(numbers.at(3));
             Vertex v(x, y, z);
-            v.resize(width, heigth);
-            points.push_back(v);            
+            Vertex v2 = project(v, dstZ);
+            v2.resize(width, heigth);
+            points.push_back(v2);
         }
         else if (!line.compare(0, 2, "f "))
         {
@@ -49,7 +50,7 @@ void Parser::parse(string fileName, int width, int heigth)
             Vertex v(x, y, 0);
             pointsTextures.push_back(v);
         }
-        }
+    }
     file.close();
 }
 
@@ -74,4 +75,19 @@ vector<Vertex> Parser::getPoints()
 vector<Triangle> Parser::getTriangles()
 {
     return triangles;
+}
+
+Vertex Parser::project(Vertex &v, double distance_z)
+{
+    Matrix matrix, identity;
+    identity = matrix.identify(4);
+    identity[3][2] = -1 / distance_z;
+    matrix = Matrix(4, 1);
+    matrix[0][0] = v.getX();
+    matrix[1][0] = v.getY();
+    matrix[2][0] = v.getZ();
+    matrix[3][0] = double(1);
+    matrix = identity * matrix;
+    Vertex vect = matrix.matrixToVector();
+    return vect;
 }
