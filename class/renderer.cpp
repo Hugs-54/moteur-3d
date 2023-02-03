@@ -104,14 +104,10 @@ void Renderer::fillTriangles(vector<Triangle> triangles, TGAImage &image, TGAIma
         vector<int> bbox = createBox(t);
 
         // Pour chaque pixel de la boite
-        for (int i = bbox.at(0); i < bbox.at(1); i++)
+        for (int i = std::max(0, bbox.at(0)); i < std::min(width-1, bbox.at(1)); i++)
         {
-            for (int j = bbox.at(2); j < bbox.at(3); j++)
+            for (int j = std::max(0, bbox.at(2)); j < std::min(height-1,bbox.at(3)); j++)
             {
-
-                if (i < 0 || i > width || j < 0 || j > height)
-                    continue;
-
                 // Si pixel dans le triangle alors remplir
                 if (isPointInsideTriangle(t, i, j, b))
                 {
@@ -122,6 +118,8 @@ void Renderer::fillTriangles(vector<Triangle> triangles, TGAImage &image, TGAIma
                     double Z = b.getX() * t.getPoint(0).getZ();
                     Z += b.getY() * t.getPoint(1).getZ();
                     Z += b.getZ() * t.getPoint(2).getZ();
+                    /*if (zbuffer[int(i + j * width)] <=zbuffer[int(i + j * width)] )
+                    if (Z<=Z)*/
                     if (zbuffer[int(i + j * width)] < Z)
                     {
                         zbuffer[int(i + j * width)] = Z;
@@ -182,3 +180,18 @@ bool Renderer::isPointInsideTriangle(Triangle &t, float px, float py, Vertex &ba
 
     return alpha > -0.0001 && beta > -0.0001 && gamma > -0.0001;
 }
+
+/*void Renderer::lookat(Vertex eye, Vertex center, Vertex up) {
+    Vertex z = (eye-center).normalize();
+    Vertex x = Vertex::cross(up,z).normalize();
+    Vertex y = Vertex::cross(z,x).normalize();
+    Matrix::Matrix Minv = Matrix::identity();
+    Matrix::Matrix Tr   = Matrix::identity();
+    for (int i=0; i<3; i++) {
+        Minv[0][i] = x[i];
+        Minv[1][i] = y[i];
+        Minv[2][i] = z[i];
+        Tr[i][3] = -eye[i];
+    }
+    ModelView = Minv*Tr;
+}*/

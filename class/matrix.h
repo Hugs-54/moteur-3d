@@ -1,6 +1,7 @@
 #ifndef __MATRIX_H__
 #define __MATRIX_H__
 
+#undef NDEBUG
 #include <cassert>
 #include <vector>
 #include "vertex.h"

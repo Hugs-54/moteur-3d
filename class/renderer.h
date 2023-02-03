@@ -24,6 +24,7 @@ public:
     double getIntensity(Vertex v1, Vertex v2, Vertex v3);
     bool isPointInsideTriangle(Triangle &t, float px, float py, Vertex &bary);
     void fillTriangles(vector<Triangle> triangles, TGAImage &image, TGAImage &texture, float *zbuffer);
+    //void lookat(Vertex eye, Vertex center, Vertex up);
 };
 
 #endif //__RENDERER_H__

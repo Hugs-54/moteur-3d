@@ -1,4 +1,5 @@
-#include "matrix.h"
+#include "matrix.h" 
+#include <iostream>
 
 Matrix::Matrix(const int rows, const int cols) : m_rows{rows}, m_cols{cols}, m_matrix{std::vector<std::vector<double>>(rows, std::vector<double>(cols, 0))}
 {
@@ -36,6 +37,7 @@ Matrix Matrix::identify(const int dimension)
     {
         for (int j = 0; j < dimension; j++)
         {
+            //temp[i][j] = (i==j);
             if (i == j)
             {
                 temp[i][j] = 1.f;
@@ -52,11 +54,10 @@ Matrix Matrix::identify(const int dimension)
 Matrix Matrix::operator*(const Matrix &other)
 {
     assert(m_cols == other.getNbRows());
+    int cols = other.getNbCols();
 
-    int cols = other.getNbRows();
-
-    Matrix temp(m_rows, cols);
-    for (int i = 0; i < m_rows; i++)
+    Matrix temp(m_rows, cols); 
+    for (int i = 0; i < m_rows; i++)   
     {
         for (int j = 0; j < cols; j++)
         {
