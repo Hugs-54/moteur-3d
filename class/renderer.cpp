@@ -111,8 +111,8 @@ void Renderer::fillTriangles(vector<Triangle> triangles, TGAImage &image, TGAIma
                 // Si pixel dans le triangle alors remplir
                 if (isPointInsideTriangle(t, i, j, b))
                 {
-                    double X = b.getX() * t.getVertexTexture(1).getX() * widthTexture + b.getY() * t.getVertexTexture(2).getX() * widthTexture + b.getZ() * t.getVertexTexture(0).getX() * widthTexture;    // X = alpha * vt[0].X + beta * vt[1].X + gamma * vt[2].X
-                    double Y = b.getX() * t.getVertexTexture(1).getY() * heightTexture + b.getY() * t.getVertexTexture(2).getY() * heightTexture + b.getZ() * t.getVertexTexture(0).getY() * heightTexture; // Y = alpha * vt[0].Y + beta * vt[1].Y + gamma * vt[2].Y
+                    double X = b.getX() * t.getVertexTexture(1).getX() * widthTexture + b.getY() * t.getVertexTexture(2).getX() * widthTexture + b.getZ() * t.getVertexTexture(0).getX() * widthTexture;    // X = alpha * vt[1].X + beta * vt[2].X + gamma * vt[0].X
+                    double Y = b.getX() * t.getVertexTexture(1).getY() * heightTexture + b.getY() * t.getVertexTexture(2).getY() * heightTexture + b.getZ() * t.getVertexTexture(0).getY() * heightTexture; // Y = alpha * vt[1].Y + beta * vt[2].Y + gamma * vt[0].Y
                     colorTexture = texture.get(X, Y);
 
                     double Z = b.getX() * t.getPoint(0).getZ();
@@ -181,17 +181,11 @@ bool Renderer::isPointInsideTriangle(Triangle &t, float px, float py, Vertex &ba
     return alpha > -0.0001 && beta > -0.0001 && gamma > -0.0001;
 }
 
-/*void Renderer::lookat(Vertex eye, Vertex center, Vertex up) {
-    Vertex z = (eye-center).normalize();
+void Renderer::lookat(Vertex eye, Vertex center, Vertex up) {
+    /*Vertex z = (eye-center).normalize();
     Vertex x = Vertex::cross(up,z).normalize();
     Vertex y = Vertex::cross(z,x).normalize();
-    Matrix::Matrix Minv = Matrix::identity();
-    Matrix::Matrix Tr   = Matrix::identity();
-    for (int i=0; i<3; i++) {
-        Minv[0][i] = x[i];
-        Minv[1][i] = y[i];
-        Minv[2][i] = z[i];
-        Tr[i][3] = -eye[i];
-    }
-    ModelView = Minv*Tr;
-}*/
+    mat<4,4> Minv = {{{x.x,x.y,x.z,0},   {y.x,y.y,y.z,0},   {z.x,z.y,z.z,0},   {0,0,0,1}}};
+    mat<4,4> Tr   = {{{1,0,0,-eye.x}, {0,1,0,-eye.y}, {0,0,1,-eye.z}, {0,0,0,1}}};
+    ModelView = Minv*Tr;*/
+}

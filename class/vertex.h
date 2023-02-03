@@ -17,7 +17,7 @@ public:
     Vertex(double x, double y, double z);
     Vertex();
     void resize(int width, int heigth);
-    //Vertex cross(const Vertex &v1, const Vertex &v2); 
+    Vertex cross(const Vertex &v1, const Vertex &v2); 
     double getX();
     double getY();
     double getZ();

@@ -20,7 +20,7 @@ int main(int argc, char **argv)
     texture.flip_vertically();
     Parser parser;
     Renderer renderer(width, height);
-    parser.parse("../resources/african_head.obj", width, height, 1.);
+    parser.parse("../resources/african_head.obj", width, height, 100.);
     // renderer.renderTriangles(parser.getTriangles(), image, red);
     // renderer.renderPoints(parser.getPoints(), image, blue);
     // renderer.renderBoxes(parser.getTriangles(), image, white);
