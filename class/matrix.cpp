@@ -37,15 +37,7 @@ Matrix Matrix::identify(const int dimension)
     {
         for (int j = 0; j < dimension; j++)
         {
-            //temp[i][j] = (i==j);
-            if (i == j)
-            {
-                temp[i][j] = 1.f;
-            }
-            else
-            {
-                temp[i][j] = 0.f;
-            }
+            temp[i][j] = (i==j);
         }
     }
     return temp;

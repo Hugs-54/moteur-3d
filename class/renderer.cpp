@@ -134,8 +134,8 @@ void Renderer::fillTriangles(vector<Triangle> triangles, TGAImage &image, TGAIma
 double Renderer::getIntensity(Vertex v1, Vertex v2, Vertex v3)
 {
     Vertex light(0, 0, -1);
-    Vertex vAB(v2.getX() - v1.getX(), v2.getY() - v1.getY(), v2.getZ() - v1.getZ());
-    Vertex vAC(v3.getX() - v1.getX(), v3.getY() - v1.getY(), v3.getZ() - v1.getZ());
+    Vertex vAB(v2.getPixelX() - v1.getPixelX(), v2.getPixelY() - v1.getPixelY(), v2.getPixelZ() - v1.getPixelZ());
+    Vertex vAC(v3.getPixelX() - v1.getPixelX(), v3.getPixelY() - v1.getPixelY(), v3.getPixelZ() - v1.getPixelZ());
     double X = vAB.getY() * vAC.getZ() - vAB.getZ() * vAC.getY();
     double Y = vAB.getZ() * vAC.getX() - vAB.getX() * vAC.getZ();
     double Z = vAB.getX() * vAC.getY() - vAB.getY() * vAC.getX();
