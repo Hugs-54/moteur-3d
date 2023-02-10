@@ -3,6 +3,7 @@
 
 Renderer::Renderer(int w, int h) : width{w}, heigth{h}
 {
+    
 }
 
 void Renderer::line(int x0, int y0, int x1, int y1, TGAImage &image, TGAColor color)
@@ -179,13 +180,4 @@ bool Renderer::isPointInsideTriangle(Triangle &t, float px, float py, Vertex &ba
     bary.setZ(gamma);
 
     return alpha > -0.0001 && beta > -0.0001 && gamma > -0.0001;
-}
-
-void Renderer::lookat(Vertex eye, Vertex center, Vertex up) {
-    /*Vertex z = (eye-center).normalize();
-    Vertex x = Vertex::cross(up,z).normalize();
-    Vertex y = Vertex::cross(z,x).normalize();
-    mat<4,4> Minv = {{{x.x,x.y,x.z,0},   {y.x,y.y,y.z,0},   {z.x,z.y,z.z,0},   {0,0,0,1}}};
-    mat<4,4> Tr   = {{{1,0,0,-eye.x}, {0,1,0,-eye.y}, {0,0,1,-eye.z}, {0,0,0,1}}};
-    ModelView = Minv*Tr;*/
 }

@@ -2,6 +2,7 @@
 #define __VERTEX_H__
 
 #include "tgaimage.h"
+#include "math.h"
 
 class Vertex
 {
@@ -17,7 +18,9 @@ public:
     Vertex(double x, double y, double z);
     Vertex();
     void resize(int width, int heigth);
-    Vertex cross(const Vertex &v1, const Vertex &v2); 
+    Vertex cross(Vertex v1, Vertex v2); 
+    float norm () const { return std::sqrt(f_x*f_x+f_y*f_y+f_z*f_z); }
+    Vertex normalize(); 
     double getX();
     double getY();
     double getZ();

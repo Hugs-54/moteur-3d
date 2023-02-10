@@ -3,6 +3,7 @@
 
 #include <vector>
 #include "vertex.h"
+#include "matrix.h"
 using namespace std;
 
 class Triangle
@@ -10,9 +11,13 @@ class Triangle
 private:
     vector<Vertex> points;
     vector<Vertex> vertexTexture;
+    Matrix identityMatrix;
+    Matrix projectionMatrix;
+    Matrix modelview;
 
 public:
-    Triangle(Vertex v1, Vertex v2, Vertex v3, Vertex vt1, Vertex vt2, Vertex vt3);
+    Triangle(int w, int h, Vertex v1, Vertex v2, Vertex v3, Vertex vt1, Vertex vt2, Vertex vt3);
+    void generateModelView();
     Vertex &getPoint(int index);
     Vertex &getVertexTexture(int index);
 };

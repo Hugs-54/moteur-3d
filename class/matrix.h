@@ -18,13 +18,13 @@ private:
 
 public:
     explicit Matrix(const int rows = SIZE, const int cols = SIZE);
-    Matrix(Vertex &v);
+    Matrix(Vertex v);
     int getNbCols() const;
     int getNbRows() const;
     std::vector<double> &operator[](const int i);
     Matrix operator*(const Matrix &other);
-    Matrix identify(const int dimension);
-    Vertex matrixToVector();
+    static Matrix identify(const int dimension);
+    Vertex matrixToVertex();
 };
 
 #endif //__MATRIX_H__
