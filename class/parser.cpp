@@ -21,9 +21,9 @@ void Parser::parse(string fileName, int width, int heigth, double dstZ)
             float y = stof(numbers.at(2));
             float z = stof(numbers.at(3));
             Vertex v(x, y, z);
-            Vertex v2 = project(v, dstZ);
-            v2.resize(width, heigth);
-            points.push_back(v2);
+            // Vertex v2 = project(v, dstZ);
+            //  v2.resize(width, heigth);
+            points.push_back(v);
         }
         else if (!line.compare(0, 2, "f "))
         {
@@ -35,7 +35,7 @@ void Parser::parse(string fileName, int width, int heigth, double dstZ)
             Tuple t1 = parseTuple(tuples.at(1));
             Tuple t2 = parseTuple(tuples.at(2));
             Tuple t3 = parseTuple(tuples.at(3));
-            Triangle tri(t1.getI1(), t2.getI1(), t3.getI1(), t1.getI2(), t2.getI2(), t3.getI2());
+            Triangle tri(width, heigth, t1.getI1(), t2.getI1(), t3.getI1(), t1.getI2(), t2.getI2(), t3.getI2());
             triangles.push_back(tri);
         }
         else if (!line.compare(0, 2, "vt"))
@@ -88,6 +88,6 @@ Vertex Parser::project(Vertex &v, double distance_z)
     matrix[2][0] = v.getZ();
     matrix[3][0] = double(1);
     matrix = identity * matrix;
-    Vertex vect = matrix.matrixToVector();
+    Vertex vect = matrix.matrixToVertex();
     return vect;
 }

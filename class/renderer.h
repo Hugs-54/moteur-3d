@@ -15,6 +15,7 @@ private:
     int width;
     int heigth;
     float areaOfTriangle(Vertex v1, Vertex v2, Vertex v3);
+    
 
 public:
     Renderer(int w, int h);
@@ -24,8 +25,8 @@ public:
     vector<int> createBox(Triangle t);
     double getIntensity(Vertex v1, Vertex v2, Vertex v3);
     bool isPointInsideTriangle(Triangle &t, float px, float py, Vertex &bary);
-    void fillTriangles(vector<Triangle> triangles, TGAImage &image, TGAImage &texture, float *zbuffer);
-    void lookat(Vertex eye, Vertex center, Vertex up);
+    void fillTriangles(vector<Triangle> triangles, TGAImage &image, TGAImage &texture, float *zbuffer);   
+
 };
 
 #endif //__RENDERER_H__

@@ -66,22 +66,22 @@ void Renderer::renderTriangles(vector<Triangle> triangles, TGAImage &image, TGAC
 
 vector<int> Renderer::createBox(Triangle t)
 {
-    int xmin = t.getPoint(0).getPixelX();
-    int ymin = t.getPoint(0).getPixelY();
-    int xmax = t.getPoint(0).getPixelX();
-    int ymax = t.getPoint(0).getPixelY();
+    int xmin = t.getPoint(0).getX();
+    int ymin = t.getPoint(0).getY();
+    int xmax = t.getPoint(0).getX();
+    int ymax = t.getPoint(0).getY();
 
     for (size_t i = 1; i < 3; i++)
     {
         Vertex v = t.getPoint(i);
-        if (v.getPixelX() < xmin)
-            xmin = v.getPixelX();
-        if (v.getPixelY() < ymin)
-            ymin = v.getPixelY();
-        if (v.getPixelX() > xmax)
-            xmax = v.getPixelX();
-        if (v.getPixelY() > ymax)
-            ymax = v.getPixelY();
+        if (v.getX() < xmin)
+            xmin = v.getX();
+        if (v.getY() < ymin)
+            ymin = v.getY();
+        if (v.getX() > xmax)
+            xmax = v.getX();
+        if (v.getY() > ymax)
+            ymax = v.getY();
     }
     vector<int> p = {xmin, xmax, ymin, ymax};
     return p;
@@ -104,9 +104,9 @@ void Renderer::fillTriangles(vector<Triangle> triangles, TGAImage &image, TGAIma
         vector<int> bbox = createBox(t);
 
         // Pour chaque pixel de la boite
-        for (int i = std::max(0, bbox.at(0)); i < std::min(width-1, bbox.at(1)); i++)
+        for (int i = std::max(0, bbox.at(0)); i < std::min(width - 1, bbox.at(1)); i++)
         {
-            for (int j = std::max(0, bbox.at(2)); j < std::min(height-1,bbox.at(3)); j++)
+            for (int j = std::max(0, bbox.at(2)); j < std::min(height - 1, bbox.at(3)); j++)
             {
                 // Si pixel dans le triangle alors remplir
                 if (isPointInsideTriangle(t, i, j, b))
@@ -118,8 +118,7 @@ void Renderer::fillTriangles(vector<Triangle> triangles, TGAImage &image, TGAIma
                     double Z = b.getX() * t.getPoint(0).getZ();
                     Z += b.getY() * t.getPoint(1).getZ();
                     Z += b.getZ() * t.getPoint(2).getZ();
-                    /*if (zbuffer[int(i + j * width)] <=zbuffer[int(i + j * width)] )
-                    if (Z<=Z)*/
+
                     if (zbuffer[int(i + j * width)] < Z)
                     {
                         zbuffer[int(i + j * width)] = Z;
@@ -134,8 +133,8 @@ void Renderer::fillTriangles(vector<Triangle> triangles, TGAImage &image, TGAIma
 double Renderer::getIntensity(Vertex v1, Vertex v2, Vertex v3)
 {
     Vertex light(0, 0, -1);
-    Vertex vAB(v2.getPixelX() - v1.getPixelX(), v2.getPixelY() - v1.getPixelY(), v2.getPixelZ() - v1.getPixelZ());
-    Vertex vAC(v3.getPixelX() - v1.getPixelX(), v3.getPixelY() - v1.getPixelY(), v3.getPixelZ() - v1.getPixelZ());
+    Vertex vAB(v2.getX() - v1.getX(), v2.getY() - v1.getY(), v2.getZ() - v1.getZ());
+    Vertex vAC(v3.getX() - v1.getX(), v3.getY() - v1.getY(), v3.getZ() - v1.getZ());
     double X = vAB.getY() * vAC.getZ() - vAB.getZ() * vAC.getY();
     double Y = vAB.getZ() * vAC.getX() - vAB.getX() * vAC.getZ();
     double Z = vAB.getX() * vAC.getY() - vAB.getY() * vAC.getX();
@@ -148,12 +147,12 @@ double Renderer::getIntensity(Vertex v1, Vertex v2, Vertex v3)
 
 float Renderer::areaOfTriangle(Vertex v1, Vertex v2, Vertex v3)
 {
-    float x1 = v1.getPixelX();
-    float x2 = v2.getPixelX();
-    float x3 = v3.getPixelX();
-    float y1 = v1.getPixelY();
-    float y2 = v2.getPixelY();
-    float y3 = v3.getPixelY();
+    float x1 = v1.getX();
+    float x2 = v2.getX();
+    float x3 = v3.getX();
+    float y1 = v1.getY();
+    float y2 = v2.getY();
+    float y3 = v3.getY();
     return (x1 * (y2 - y3) + x2 * (y3 - y1) + x3 * (y1 - y2)) / 2.0;
 }
 
@@ -179,13 +178,4 @@ bool Renderer::isPointInsideTriangle(Triangle &t, float px, float py, Vertex &ba
     bary.setZ(gamma);
 
     return alpha > -0.0001 && beta > -0.0001 && gamma > -0.0001;
-}
-
-void Renderer::lookat(Vertex eye, Vertex center, Vertex up) {
-    /*Vertex z = (eye-center).normalize();
-    Vertex x = Vertex::cross(up,z).normalize();
-    Vertex y = Vertex::cross(z,x).normalize();
-    mat<4,4> Minv = {{{x.x,x.y,x.z,0},   {y.x,y.y,y.z,0},   {z.x,z.y,z.z,0},   {0,0,0,1}}};
-    mat<4,4> Tr   = {{{1,0,0,-eye.x}, {0,1,0,-eye.y}, {0,0,1,-eye.z}, {0,0,0,1}}};
-    ModelView = Minv*Tr;*/
 }

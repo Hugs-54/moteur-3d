@@ -20,15 +20,16 @@ int main(int argc, char **argv)
     texture.flip_vertically();
     Parser parser;
     Renderer renderer(width, height);
-    parser.parse("../resources/african_head.obj", width, height, 100.);
+    parser.parse("../resources/african_head.obj", width, height, 10.);
     // renderer.renderTriangles(parser.getTriangles(), image, red);
     // renderer.renderPoints(parser.getPoints(), image, blue);
     // renderer.renderBoxes(parser.getTriangles(), image, white);
     float *zbuffer = new float[width * height];
-    for (int i = width * height; i--; zbuffer[i] = -std::numeric_limits<float>::max());
+    for (int i = width * height; i--; zbuffer[i] = -std::numeric_limits<float>::max())
+        ;
     renderer.fillTriangles(parser.triangles, image, texture, zbuffer);
     image.flip_vertically(); // i want to have the origin at the left bottom corner of the image
     image.write_tga_file("output.tga");
-    delete  [] zbuffer;
+    delete[] zbuffer;
     return 0;
 }
