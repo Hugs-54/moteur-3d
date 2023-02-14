@@ -10,8 +10,8 @@ Triangle::Triangle(int w, int h, Vertex v1, Vertex v2, Vertex v3, Vertex vt1, Ve
 {
     // Position dans l'image
     identityMatrix = Matrix::identify(4);
-    int x = w / 8;
-    int y = h / 8;
+    float x = w / 8.;
+    float y = h / 8.;
     identityMatrix[0][3] = x + (w * .75f) / 2.f;
     identityMatrix[1][3] = y + (h * .75f) / 2.f;
     identityMatrix[2][3] = 255 / 2.f;
@@ -27,12 +27,9 @@ Triangle::Triangle(int w, int h, Vertex v1, Vertex v2, Vertex v3, Vertex vt1, Ve
     modelview = Matrix::identify(4);
     generateModelView();
 
-    Matrix m1(v1);
-    Matrix m2(v2);
-    Matrix m3(v3);
-    Matrix z1 = identityMatrix * projectionMatrix * modelview * m1;
-    Matrix z2 = identityMatrix * projectionMatrix * modelview * m2;
-    Matrix z3 = identityMatrix * projectionMatrix * modelview * m3;
+    Matrix z1 = identityMatrix * projectionMatrix * modelview * Matrix(v1);
+    Matrix z2 = identityMatrix * projectionMatrix * modelview * Matrix(v2);
+    Matrix z3 = identityMatrix * projectionMatrix * modelview * Matrix(v3);
 
     Vertex ve1 = z1.matrixToVertex();
     Vertex ve2 = z2.matrixToVertex();

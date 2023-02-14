@@ -21,8 +21,6 @@ void Parser::parse(string fileName, int width, int heigth, double dstZ)
             float y = stof(numbers.at(2));
             float z = stof(numbers.at(3));
             Vertex v(x, y, z);
-            // Vertex v2 = project(v, dstZ);
-            //  v2.resize(width, heigth);
             points.push_back(v);
         }
         else if (!line.compare(0, 2, "f "))

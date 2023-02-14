@@ -40,8 +40,8 @@ void Renderer::renderPoints(vector<Vertex> vertexs, TGAImage &image, TGAColor co
     for (size_t i = 0; i < vertexs.size(); i++)
     {
         Vertex v = vertexs.at(i);
-        x = v.getPixelX();
-        y = v.getPixelY();
+        x = v.getX();
+        y = v.getY();
         image.set(x, y, color);
     }
 }
@@ -55,10 +55,10 @@ void Renderer::renderTriangles(vector<Triangle> triangles, TGAImage &image, TGAC
         {
             Vertex v0 = t.getPoint(i);
             Vertex v1 = t.getPoint((i + 1) % 3);
-            int x0 = v0.getPixelX();
-            int y0 = v0.getPixelY();
-            int x1 = v1.getPixelX();
-            int y1 = v1.getPixelY();
+            int x0 = v0.getX();
+            int y0 = v0.getY();
+            int x1 = v1.getX();
+            int y1 = v1.getY();
             line(x0, y0, x1, y1, image, color);
         }
     }
@@ -145,37 +145,37 @@ double Renderer::getIntensity(Vertex v1, Vertex v2, Vertex v3)
     return intensity;
 }
 
-float Renderer::areaOfTriangle(Vertex v1, Vertex v2, Vertex v3)
+double Renderer::areaOfTriangle(Vertex v1, Vertex v2, Vertex v3)
 {
-    float x1 = v1.getX();
-    float x2 = v2.getX();
-    float x3 = v3.getX();
-    float y1 = v1.getY();
-    float y2 = v2.getY();
-    float y3 = v3.getY();
+    double x1 = v1.getX();
+    double x2 = v2.getX();
+    double x3 = v3.getX();
+    double y1 = v1.getY();
+    double y2 = v2.getY();
+    double y3 = v3.getY();
     return (x1 * (y2 - y3) + x2 * (y3 - y1) + x3 * (y1 - y2)) / 2.0;
 }
 
-bool Renderer::isPointInsideTriangle(Triangle &t, float px, float py, Vertex &bary)
+bool Renderer::isPointInsideTriangle(Triangle &t, double px, double py, Vertex &bary)
 {
     Vertex &v1 = t.getPoint(0);
     Vertex &v2 = t.getPoint(1);
     Vertex &v3 = t.getPoint(2);
     Vertex v4(px, py, 0);
-    v4.setPixel(px, py);
 
     double A = areaOfTriangle(v1, v2, v3);
     double A1 = areaOfTriangle(v4, v2, v3);
     double A2 = areaOfTriangle(v1, v4, v3);
     double A3 = areaOfTriangle(v1, v2, v4);
 
-    double alpha = (double)A2 / (double)A;
-    double beta = (double)A3 / (double)A;
-    double gamma = (double)A1 / (double)A;
+    double alpha = A2 / A;
+    double beta = A3 / A;
+    double gamma = A1 / A;
 
     bary.setX(alpha);
     bary.setY(beta);
     bary.setZ(gamma);
 
-    return alpha > -0.0001 && beta > -0.0001 && gamma > -0.0001;
+    double marge = -0.0001;
+    return alpha > marge && beta > marge && gamma > marge;
 }

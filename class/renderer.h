@@ -14,8 +14,7 @@ class Renderer
 private:
     int width;
     int heigth;
-    float areaOfTriangle(Vertex v1, Vertex v2, Vertex v3);
-    
+    double areaOfTriangle(Vertex v1, Vertex v2, Vertex v3);
 
 public:
     Renderer(int w, int h);
@@ -24,9 +23,8 @@ public:
     void renderTriangles(vector<Triangle> triangles, TGAImage &image, TGAColor color);
     vector<int> createBox(Triangle t);
     double getIntensity(Vertex v1, Vertex v2, Vertex v3);
-    bool isPointInsideTriangle(Triangle &t, float px, float py, Vertex &bary);
-    void fillTriangles(vector<Triangle> triangles, TGAImage &image, TGAImage &texture, float *zbuffer);   
-
+    bool isPointInsideTriangle(Triangle &t, double px, double py, Vertex &bary);
+    void fillTriangles(vector<Triangle> triangles, TGAImage &image, TGAImage &texture, float *zbuffer);
 };
 
 #endif //__RENDERER_H__
