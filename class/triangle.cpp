@@ -6,18 +6,31 @@ Vertex center(0., 0., 0.);
 Vertex axe(0., 1., 0.);
 Vertex diff_pov_center(eyeCenter.getX() - center.getX(), eyeCenter.getY() - center.getY(), eyeCenter.getZ() - center.getZ());
 
-Triangle::Triangle(int w, int h, Vertex v1, Vertex v2, Vertex v3, Vertex vt1, Vertex vt2, Vertex vt3)
+Triangle::Triangle(int w, int h, Vertex v1, Vertex v2, Vertex v3, Vertex vt1, Vertex vt2, Vertex vt3) : width{w}, heigth{h}
+{
+    points.push_back(v1);
+    points.push_back(v2);
+    points.push_back(v3);
+
+    vertexTexture.push_back(vt1);
+    vertexTexture.push_back(vt2);
+    vertexTexture.push_back(vt3);
+}
+
+void Triangle::movingCamera()
 {
     // Position dans l'image
     identityMatrix = Matrix::identify(4);
-    float x = w / 8.;
-    float y = h / 8.;
-    identityMatrix[0][3] = x + (w * .75f) / 2.f;
-    identityMatrix[1][3] = y + (h * .75f) / 2.f;
+    int width = 1000;
+    int heigth = 1000;
+    float x = width / 8.;
+    float y = heigth / 8.;
+    identityMatrix[0][3] = x + (width * .75f) / 2.f;
+    identityMatrix[1][3] = y + (heigth * .75f) / 2.f;
     identityMatrix[2][3] = 255 / 2.f;
 
-    identityMatrix[0][0] = (w * .75f) / 2.f;
-    identityMatrix[1][1] = (h * .75f) / 2.f;
+    identityMatrix[0][0] = (width * .75f) / 2.f;
+    identityMatrix[1][1] = (heigth * .75f) / 2.f;
     identityMatrix[2][2] = 255 / 2.f;
 
     // L'angle camera
@@ -27,21 +40,18 @@ Triangle::Triangle(int w, int h, Vertex v1, Vertex v2, Vertex v3, Vertex vt1, Ve
     modelview = Matrix::identify(4);
     generateModelView();
 
-    Matrix z1 = identityMatrix * projectionMatrix * modelview * Matrix(v1);
-    Matrix z2 = identityMatrix * projectionMatrix * modelview * Matrix(v2);
-    Matrix z3 = identityMatrix * projectionMatrix * modelview * Matrix(v3);
+    Matrix z1 = identityMatrix * projectionMatrix * modelview * Matrix(points.at(0));
+    Matrix z2 = identityMatrix * projectionMatrix * modelview * Matrix(points.at(1));
+    Matrix z3 = identityMatrix * projectionMatrix * modelview * Matrix(points.at(2));
 
     Vertex ve1 = z1.matrixToVertex();
     Vertex ve2 = z2.matrixToVertex();
     Vertex ve3 = z3.matrixToVertex();
 
+    points.clear();
     points.push_back(ve1);
     points.push_back(ve2);
     points.push_back(ve3);
-
-    vertexTexture.push_back(vt1);
-    vertexTexture.push_back(vt2);
-    vertexTexture.push_back(vt3);
 }
 
 void Triangle::generateModelView()

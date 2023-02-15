@@ -98,15 +98,16 @@ void Renderer::fillTriangles(vector<Triangle> triangles, TGAImage &image, TGAIma
     for (Triangle &t : triangles)
     {
         double intensity = getIntensity(t.getPoint(0), t.getPoint(1), t.getPoint(2));
+        t.movingCamera();
         if (intensity < 0)
             continue; // Si l'intensité est inférieur à zéro
         TGAColor colorTexture;
         vector<int> bbox = createBox(t);
 
         // Pour chaque pixel de la boite
-        for (int i = std::max(0, bbox.at(0)); i < std::min(width - 1, bbox.at(1)); i++)
+        for (int i = std::max(0, bbox.at(0)); i <= std::min(width - 1, bbox.at(1)); i++)
         {
-            for (int j = std::max(0, bbox.at(2)); j < std::min(height - 1, bbox.at(3)); j++)
+            for (int j = std::max(0, bbox.at(2)); j <= std::min(height - 1, bbox.at(3)); j++)
             {
                 // Si pixel dans le triangle alors remplir
                 if (isPointInsideTriangle(t, i, j, b))

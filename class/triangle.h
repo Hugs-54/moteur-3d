@@ -9,6 +9,8 @@ using namespace std;
 class Triangle
 {
 private:
+    int width;
+    int heigth;
     vector<Vertex> points;
     vector<Vertex> vertexTexture;
     Matrix identityMatrix;
@@ -18,6 +20,7 @@ private:
 public:
     Triangle(int w, int h, Vertex v1, Vertex v2, Vertex v3, Vertex vt1, Vertex vt2, Vertex vt3);
     void generateModelView();
+    void movingCamera();
     Vertex &getPoint(int index);
     Vertex &getVertexTexture(int index);
 };
