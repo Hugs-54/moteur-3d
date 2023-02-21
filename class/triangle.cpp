@@ -12,6 +12,13 @@ Triangle::Triangle(int w, int h, Vertex v1, Vertex v2, Vertex v3, Vertex vt1, Ve
     points.push_back(v2);
     points.push_back(v3);
 
+    Vertex vAB(v2.getX() - v1.getX(), v2.getY() - v1.getY(), v2.getZ() - v1.getZ());
+    Vertex vAC(v3.getX() - v1.getX(), v3.getY() - v1.getY(), v3.getZ() - v1.getZ());
+    double X = vAB.getY() * vAC.getZ() - vAB.getZ() * vAC.getY();
+    double Y = vAB.getZ() * vAC.getX() - vAB.getX() * vAC.getZ();
+    double Z = vAB.getX() * vAC.getY() - vAB.getY() * vAC.getX();
+    normal = Vertex(X, Y, Z);
+
     vertexTexture.push_back(vt1);
     vertexTexture.push_back(vt2);
     vertexTexture.push_back(vt3);
@@ -88,4 +95,9 @@ Vertex &Triangle::getPoint(int index)
 Vertex &Triangle::getVertexTexture(int index)
 {
     return vertexTexture.at(index);
+}
+
+Vertex Triangle::getNormal()
+{
+    return normal;
 }

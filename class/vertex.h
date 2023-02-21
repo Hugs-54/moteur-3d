@@ -23,5 +23,8 @@ public:
     void setX(double x);
     void setY(double y);
     void setZ(double z);
+    double dot(Vertex v);
+    Vertex dot(double d);
+    Vertex sub(Vertex v);
 };
 #endif //__VERTEX_H__
