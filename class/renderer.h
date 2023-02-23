@@ -24,8 +24,8 @@ public:
     vector<int> createBox(Triangle t);
     double getIntensity(Vertex v1, Vertex v2, Vertex v3);
     bool isPointInsideTriangle(Triangle &t, double px, double py, Vertex &bary);
-    void fillTriangles(vector<Triangle> triangles, TGAImage &image, TGAImage &texture, float *zbuffer);
-    TGAColor phong_shading(Triangle &triangle, TGAColor &material_color);
+    void fillTriangles(vector<Triangle> triangles, TGAImage &image, TGAImage &texture, TGAImage &normalmap, float *zbuffer);
+    bool fragment(TGAColor &normal, TGAColor &color, Vertex &bary);
 };
 
 #endif //__RENDERER_H__

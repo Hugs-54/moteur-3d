@@ -2,7 +2,7 @@
 
 Parser::Parser() {}
 
-void Parser::parse(string fileName, int width, int heigth, double dstZ)
+void Parser::parse(string fileName, int width, int heigth)
 {
     fstream file;
     file.open(fileName, ios::in);
@@ -63,29 +63,4 @@ Tuple Parser::parseTuple(string t)
     }
     Tuple tu(points.at(integers.at(0) - 1), pointsTextures.at(integers.at(1) - 1), integers.at(2));
     return tu;
-}
-
-vector<Vertex> Parser::getPoints()
-{
-    return points;
-}
-
-vector<Triangle> Parser::getTriangles()
-{
-    return triangles;
-}
-
-Vertex Parser::project(Vertex &v, double distance_z)
-{
-    Matrix matrix, identity;
-    identity = matrix.identify(4);
-    identity[3][2] = -1 / distance_z;
-    matrix = Matrix(4, 1);
-    matrix[0][0] = v.getX();
-    matrix[1][0] = v.getY();
-    matrix[2][0] = v.getZ();
-    matrix[3][0] = double(1);
-    matrix = identity * matrix;
-    Vertex vect = matrix.matrixToVertex();
-    return vect;
 }

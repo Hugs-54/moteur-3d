@@ -1,7 +1,7 @@
 #include "renderer.h"
 #include <iostream>
 
-Vertex light(0, 0, -1);
+Vertex light_dir(0, 0, -1);
 
 Renderer::Renderer(int w, int h) : width{w}, heigth{h}
 {
@@ -89,7 +89,7 @@ vector<int> Renderer::createBox(Triangle t)
     return p;
 }
 
-void Renderer::fillTriangles(vector<Triangle> triangles, TGAImage &image, TGAImage &texture, float *zbuffer)
+void Renderer::fillTriangles(vector<Triangle> triangles, TGAImage &image, TGAImage &texture, TGAImage &normalmap, float *zbuffer)
 {
     Vertex b;
     int width = image.get_width();
@@ -100,10 +100,9 @@ void Renderer::fillTriangles(vector<Triangle> triangles, TGAImage &image, TGAIma
     for (Triangle &t : triangles)
     {
         double intensity = getIntensity(t.getPoint(0), t.getPoint(1), t.getPoint(2));
-        t.movingCamera();
-        if (intensity < 0)
-            continue; // Si l'intensité est inférieur à zéro
+        t.movingCamera(width, height);
         TGAColor colorTexture;
+        TGAColor colorNormal;
         vector<int> bbox = createBox(t);
 
         // Pour chaque pixel de la boite
@@ -117,6 +116,7 @@ void Renderer::fillTriangles(vector<Triangle> triangles, TGAImage &image, TGAIma
                     double X = b.getX() * t.getVertexTexture(1).getX() * widthTexture + b.getY() * t.getVertexTexture(2).getX() * widthTexture + b.getZ() * t.getVertexTexture(0).getX() * widthTexture;    // X = alpha * vt[1].X + beta * vt[2].X + gamma * vt[0].X
                     double Y = b.getX() * t.getVertexTexture(1).getY() * heightTexture + b.getY() * t.getVertexTexture(2).getY() * heightTexture + b.getZ() * t.getVertexTexture(0).getY() * heightTexture; // Y = alpha * vt[1].Y + beta * vt[2].Y + gamma * vt[0].Y
                     colorTexture = texture.get(X, Y);
+                    colorNormal = normalmap.get(X, Y);
 
                     double Z = b.getX() * t.getPoint(0).getZ();
                     Z += b.getY() * t.getPoint(1).getZ();
@@ -125,14 +125,33 @@ void Renderer::fillTriangles(vector<Triangle> triangles, TGAImage &image, TGAIma
                     if (zbuffer[int(i + j * width)] < Z)
                     {
                         zbuffer[int(i + j * width)] = Z;
-                        // image.set(i, j, TGAColor(colorTexture.r * intensity, colorTexture.g * intensity, colorTexture.b * intensity, colorTexture.a * intensity));
-                        TGAColor color = phong_shading(t, colorTexture);
-                        image.set(i, j, color);
+                        bool discard = fragment(colorNormal, colorTexture, b);
+                        if (!discard)
+                        {
+                            // image.set(i, j, TGAColor(colorTexture.r*intensity,colorTexture.g*intensity,colorTexture.b*intensity,colorTexture.a*intensity));
+                            image.set(i, j, colorTexture);
+                        }
                     }
                 }
             }
         }
     }
+}
+
+bool Renderer::fragment(TGAColor &normal, TGAColor &color, Vertex &bary)
+{
+    Vertex norm(normal.r * 2. / 255. - 1., normal.g * 2. / 255. - 1., normal.b * 2. / 255. - 1.);
+    norm = norm.normalize();
+    Vertex light = light_dir.normalize();
+    double intensity = light_dir.norm();
+    Vertex rgb(color.r, color.g, color.b);
+    double v = rgb.getX() * norm.getX() + rgb.getY() * norm.getY() + rgb.getZ() * norm.getZ();
+    double diffuse = std::min(1., std::max(0., v) / 255.);
+    // diffuse *= (intensity * bary.getX() + intensity * bary.getY() + intensity * bary.getZ());
+    color.r *= diffuse;
+    color.g *= diffuse;
+    color.b *= diffuse;
+    return false;
 }
 
 double Renderer::getIntensity(Vertex v1, Vertex v2, Vertex v3)
@@ -145,7 +164,7 @@ double Renderer::getIntensity(Vertex v1, Vertex v2, Vertex v3)
     Vertex n(X, Y, Z);
     double length = sqrt((n.getX() * n.getX()) + (n.getY() * n.getY()) + (n.getZ() * n.getZ()));
     Vertex n2(n.getX() / length, n.getY() / length, n.getZ() / length);
-    double intensity = -((light.getX() * n2.getX()) + (light.getY() * n2.getY()) + (light.getZ() * n2.getZ()));
+    double intensity = -((light_dir.getX() * n2.getX()) + (light_dir.getY() * n2.getY()) + (light_dir.getZ() * n2.getZ()));
     return intensity;
 }
 
@@ -182,28 +201,4 @@ bool Renderer::isPointInsideTriangle(Triangle &t, double px, double py, Vertex &
 
     double marge = -0.0001;
     return alpha > marge && beta > marge && gamma > marge;
-}
-
-TGAColor Renderer::phong_shading(Triangle &triangle, TGAColor &material_color)
-{
-    float ka = 0.2f;
-    float kd = 0.5f;
-    float ks = 0.3f;
-    float shininess = 45;
-
-    Vertex normal = triangle.getNormal();
-    Vertex p = triangle.getPoint(0);
-    Vertex lightDir = Vertex(light.getX() - p.getX(), light.getY() - p.getY(), light.getZ() - p.getZ()).normalize();
-    double cosTheta = std::max(.0, normal.dot(lightDir));
-    Vertex viewDir = Vertex(0, 0, 1); // Assuming view direction is (0, 0, 1) for simplicity
-    Vertex reflection = normal.dot(2 * cosTheta);
-    reflection = reflection.sub(lightDir);
-    reflection = reflection.normalize();
-    double cosAlpha = std::max(.0, reflection.dot(viewDir));
-
-    TGAColor ambient = TGAColor(material_color.r * ka, material_color.g * ka, material_color.b * ka, material_color.a * ka);
-    TGAColor diffuse = TGAColor(material_color.r * 255 * kd * cosTheta, material_color.g * 255 * kd * cosTheta, material_color.b * 255 * kd * cosTheta, material_color.a * 255 * kd * cosTheta);
-    TGAColor specular = TGAColor(255 * ks * pow(cosAlpha, shininess), 255 * ks * pow(cosAlpha, shininess), 255 * ks * pow(cosAlpha, shininess), 255 * ks * pow(cosAlpha, shininess));
-
-    return TGAColor(ambient.r + diffuse.r + specular.r, ambient.g + diffuse.g + specular.g, ambient.b + diffuse.b + specular.b, ambient.a + diffuse.a + specular.a);
 }

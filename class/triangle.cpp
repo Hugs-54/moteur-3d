@@ -24,25 +24,25 @@ Triangle::Triangle(int w, int h, Vertex v1, Vertex v2, Vertex v3, Vertex vt1, Ve
     vertexTexture.push_back(vt3);
 }
 
-void Triangle::movingCamera()
+void Triangle::movingCamera(int width, int heigth)
 {
     // Position dans l'image
     identityMatrix = Matrix::identify(4);
-    int width = 1000;
-    int heigth = 1000;
+    int w = width * .75;
+    int h = heigth * .75;
     float x = width / 8.;
     float y = heigth / 8.;
-    identityMatrix[0][3] = x + (width * .75f) / 2.f;
-    identityMatrix[1][3] = y + (heigth * .75f) / 2.f;
-    identityMatrix[2][3] = 255 / 2.f;
+    identityMatrix[0][3] = x + w / 2.;
+    identityMatrix[1][3] = y + h / 2.;
+    identityMatrix[2][3] = 255. / 2.;
 
-    identityMatrix[0][0] = (width * .75f) / 2.f;
-    identityMatrix[1][1] = (heigth * .75f) / 2.f;
-    identityMatrix[2][2] = 255 / 2.f;
+    identityMatrix[0][0] = w / 2.;
+    identityMatrix[1][1] = h / 2.;
+    identityMatrix[2][2] = 255. / 2.;
 
     // L'angle camera
     projectionMatrix = Matrix::identify(4);
-    projectionMatrix[3][2] = -1.f / diff_pov_center.norm();
+    projectionMatrix[3][2] = -1. / diff_pov_center.norm();
     // Profondeur camera
     modelview = Matrix::identify(4);
     generateModelView();

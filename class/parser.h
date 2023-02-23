@@ -19,11 +19,8 @@ public:
     vector<Triangle> triangles;
     vector<Vertex> pointsTextures;
     vector<Vertex> vn;
-    void parse(string fileName, int width, int heigth, double dstZ);
+    void parse(string fileName, int width, int heigth);
     Tuple parseTuple(string t);
-    vector<Vertex> getPoints();
-    vector<Triangle> getTriangles();
-    Vertex project(Vertex &v, double distance_z);
 };
 
 #endif //__PARSER_H__

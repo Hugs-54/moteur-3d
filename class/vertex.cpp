@@ -19,9 +19,9 @@ Vertex Vertex::cross(Vertex v1, Vertex v2)
 Vertex Vertex::normalize()
 {
     return Vertex(
-        f_x * (1 / norm()),
-        f_y * (1 / norm()),
-        f_z * (1 / norm()));
+        f_x * (1. / norm()),
+        f_y * (1. / norm()),
+        f_z * (1. / norm()));
 }
 
 double Vertex::getX()
@@ -52,19 +52,4 @@ void Vertex::setY(double y)
 void Vertex::setZ(double z)
 {
     f_z = z;
-}
-
-double Vertex::dot(Vertex v)
-{
-    return f_x * v.getX() + f_y * v.getY() + f_z * v.getZ();
-}
-
-Vertex Vertex::dot(double d)
-{
-    return Vertex(f_x * d, f_y * d, f_z * d);
-}
-
-Vertex Vertex::sub(Vertex v)
-{
-    return Vertex(f_x - v.getX(), f_y - v.getY(), f_z - v.getZ());
 }

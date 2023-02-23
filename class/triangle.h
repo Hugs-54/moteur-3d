@@ -22,7 +22,7 @@ public:
     Triangle(int w, int h, Vertex v1, Vertex v2, Vertex v3, Vertex vt1, Vertex vt2, Vertex vt3);
     void generateModelView();
     Vertex getNormal();
-    void movingCamera();
+    void movingCamera(int width, int heigth);
     Vertex &getPoint(int index);
     Vertex &getVertexTexture(int index);
 };
