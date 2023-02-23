@@ -128,7 +128,6 @@ void Renderer::fillTriangles(vector<Triangle> triangles, TGAImage &image, TGAIma
                         bool discard = fragment(colorNormal, colorTexture, b);
                         if (!discard)
                         {
-                            // image.set(i, j, TGAColor(colorTexture.r*intensity,colorTexture.g*intensity,colorTexture.b*intensity,colorTexture.a*intensity));
                             image.set(i, j, colorTexture);
                         }
                     }
@@ -143,11 +142,12 @@ bool Renderer::fragment(TGAColor &normal, TGAColor &color, Vertex &bary)
     Vertex norm(normal.r * 2. / 255. - 1., normal.g * 2. / 255. - 1., normal.b * 2. / 255. - 1.);
     norm = norm.normalize();
     Vertex light = light_dir.normalize();
-    double intensity = light_dir.norm();
+    double produitSc = norm.getX() * light.getX() + norm.getY() * light.getY() + norm.getZ() * light.getZ();
+    double intensity = std::max(1.25, produitSc);
     Vertex rgb(color.r, color.g, color.b);
     double v = rgb.getX() * norm.getX() + rgb.getY() * norm.getY() + rgb.getZ() * norm.getZ();
     double diffuse = std::min(1., std::max(0., v) / 255.);
-    // diffuse *= (intensity * bary.getX() + intensity * bary.getY() + intensity * bary.getZ());
+    diffuse *= intensity;
     color.r *= diffuse;
     color.g *= diffuse;
     color.b *= diffuse;
