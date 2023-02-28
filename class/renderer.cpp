@@ -99,7 +99,7 @@ void Renderer::fillTriangles(vector<Triangle> triangles, TGAImage &image, TGAIma
 
     for (Triangle &t : triangles)
     {
-        double intensity = getIntensity(t.getPoint(0), t.getPoint(1), t.getPoint(2));
+        // double intensity = getIntensity(t.getPoint(0), t.getPoint(1), t.getPoint(2));
         t.movingCamera(width, height);
         TGAColor colorTexture;
         TGAColor colorNormal;
@@ -143,7 +143,7 @@ bool Renderer::fragment(TGAColor &normal, TGAColor &color, Vertex &bary)
     norm = norm.normalize();
     Vertex light = light_dir.normalize();
     double produitSc = norm.getX() * light.getX() + norm.getY() * light.getY() + norm.getZ() * light.getZ();
-    double intensity = std::max(1.25, produitSc);
+    double intensity = std::max(1.2, produitSc);
     Vertex rgb(color.r, color.g, color.b);
     double v = rgb.getX() * norm.getX() + rgb.getY() * norm.getY() + rgb.getZ() * norm.getZ();
     double diffuse = std::min(1., std::max(0., v) / 255.);
