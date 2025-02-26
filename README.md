@@ -1,6 +1,5 @@
 # moteur3D
-
-Rendu de modèle 3D
+Dans le cadre d'un projet de cours, l'objectif est de créer un moteur qui permet le rendu grpahique de modèle 3D.
 
 Lancer le programme :<br/>
 cd class<br/>
